@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Roboto+Flex:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-tertiary-fixed": "#00210b", "primary-fixed-dim": "#cdbdff", "surface-variant": "#33353a", "on-primary-fixed-variant": "#4f00d0", "on-secondary": "#00363d", "surface-dim": "#111318", "on-tertiary-container": "#e8ffe7", "inverse-on-surface": "#2e3036", "tertiary-container": "#008441", "surface-container": "#1e1f25", "surface-container-low": "#1a1b21", "surface-tint": "#cdbdff", "error-container": "#93000a", "secondary-container": "#00e3fd", "on-secondary-fixed": "#001f24", "outline-variant": "#494455", "tertiary": "#00e475", "error": "#ffb4ab", "on-background": "#e2e2e9", "on-secondary-container": "#00616d", "surface-container-lowest": "#0c0e13", "on-surface": "#e2e2e9", "surface-container-highest": "#33353a", "background": "#111318", "on-error-container": "#ffdad6", "inverse-primary": "#6833ea", "on-surface-variant": "#cac3d8", "primary-container": "#7c4dff", "on-tertiary-fixed-variant": "#005226", "surface-container-high": "#282a2f", "on-primary-container": "#fcf6ff", "primary-fixed": "#e8deff", "surface": "#111318", "outline": "#948ea1", "secondary-fixed": "#9cf0ff", "surface-bright": "#37393f", "secondary-fixed-dim": "#00daf3", "secondary": "#bdf4ff", "on-error": "#690005", "on-secondary-fixed-variant": "#004f58", "on-tertiary": "#003918", "on-primary-fixed": "#20005f", "primary": "#cdbdff", "tertiary-fixed-dim": "#00e475", "inverse-surface": "#e2e2e9", "tertiary-fixed": "#62ff96", "on-primary": "#370096" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": { "margin": "1.5rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "margin-mobile": "1rem", "space-lg": "1.5rem", "gutter-mobile": "0.75rem", "space-xl": "2rem", "space-md": "1rem", "gutter": "1rem" }, "fontFamily": { "headline-lg-mobile": ["Plus Jakarta Sans"], "label-md": ["Roboto Flex"], "body-md": ["Roboto Flex"], "headline-md": ["Plus Jakarta Sans"], "label-sm": ["Roboto Flex"], "headline-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-lg": ["Roboto Flex"], "display-lg-mobile": ["Plus Jakarta Sans"], "body-lg": ["Roboto Flex"], "body-sm": ["Roboto Flex"], "display-lg": ["Plus Jakarta Sans"] }, "fontSize": { "headline-lg-mobile": ["26px", { "lineHeight": "34px", "fontWeight": "700" }], "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "label-sm": ["10px", { "lineHeight": "14px", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "display-lg-mobile": ["34px", { "lineHeight": "42px", "fontWeight": "800" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "display-lg": ["44px", { "lineHeight": "52px", "fontWeight": "800" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.35)]"><div class="flex items-center justify-between px-margin-mobile h-6 text-on-surface-variant font-label-sm text-label-sm select-none"><span class="font-label-md text-label-md tracking-tight font-medium text-on-surface">09:41</span><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined !text-[14px] text-tertiary">cloud_done</span><span class="material-symbols-outlined !text-[14px]">wifi</span><span class="material-symbols-outlined !text-[14px]">signal_cellular_4_bar</span><span class="material-symbols-outlined !text-[14px]">battery_charging_full</span></div></div><div class="h-20 px-margin-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-xs min-w-0"><button aria-label="Navigate Back" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container active:scale-95 transition-all shrink-0" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><img alt="Aura Player Logo" class="h-7 w-auto object-contain shrink-0 hidden xs:block" src="https://lh3.googleusercontent.com/aida/AEtjO1X5R8251KbYPVG9TwW4SjC9RuIMf7kyma2FP3DN-kNzPY8Jn8SWBFt_kxP308NGk6weH2VgmvcSyV1Y-BtjDiE7wwXdlSgZPqmRZPd9ES0RJeZAWWscP2871sJoKeursiUwSJbYA9zIB_CQzo2IGn1OyJ6lX--96xmV90_VfX3wSn5__TO0t9fdsewPbcZ5AYPxPHwz1y3hleF66hklG4ZRlRooFa-VeRHcBBeO_-AN4f7-JLo-xpg9Qg"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">Now Playing</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">AuraMedia</span></div></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="More Options" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface active:scale-95 transition-all"><span class="material-symbols-outlined text-[22px]">more_vert</span></button><button aria-label="Profile" class="w-11 h-11 flex items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-primary"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbK85hia3XzhxX-0zilGf6zgwp0-uCzlWu5HOp_a1R1GPgFBIouTCwqAbi_0bP-mOOY-tWKPHjdGRqOr0hGiax7mud-hMFacoDCL__WDyPMmBu5Yrrwh1djs0sOya_lRsWM4H4VgIA13hh9eQ5FDHPSvTxF0o_EQGD7pKZLVPsuerWOrPuw1xr1KS5NAg9L_3fiLeDhv2AVoUhrHBtloQZA6cfIChWLJtqmT0CUIrTJQyOfnytuIum"/></button></div></div></header><main class="flex flex-col relative w-full pt-20 pb-safe bg-surface px-margin-mobile flex-1"><div class="flex flex-col w-full relative select-none overflow-hidden pb-4">
+<!-- Immersive Cinematic Video Screen Container -->
+<div class="relative w-full aspect-[16/10] sm:aspect-[21/9] rounded-lg overflow-hidden bg-surface-container-lowest shadow-[0_16px_40px_rgba(0,0,0,0.8)]">
+<!-- Cinematic Video Frame (Gargantua Accretion Disk Simulation) -->
+<div class="absolute inset-0 bg-cover bg-center w-full h-full transform scale-[1.02] transition-transform duration-700 ease-out" data-alt="A breathtaking photorealistic 4K cinematic scene of a massive glowing golden-cyan spinning accretion disk around a supermassive black hole Gargantua in deep space from Interstellar, lens flares, gravitational lensing, interstellar cosmic dust, deep blacks, high dynamic range, volumetric lighting, bioluminescent ultraviolet tones" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDcXLrfOK5-7eEgAq45bfvLBUBbcxm-CC-n2x-_okIws4oQCTPVhHzEkHcJdLWq9Uk1D0NKTKo_hCpvVM0___mX-e2W0SVexoZn9yf7dnvNnO8LqGxRRx7rd7rA26S0nGCJL0hhxVHAH_B6GTMBioTw0b_6rhIdocR-CHb47UiBHa1asQ09-HYTXtXEpnRHYuJzODyHcdQ-DqQSb97ytdOLCNmGrS4T1aKRit-aijx3vBOIMfdkqO9F')">
+<!-- Vignette and Glow Scrims -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/80 opacity-90"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/70 via-transparent to-surface-container-lowest/70"></div>
+</div>
+<!-- Live HUD Interactive Layer -->
+<div class="absolute inset-0 flex flex-col justify-between p-space-sm z-20 transition-opacity duration-300" id="gesture-hud-overlay">
+<!-- Top HUD Actions Bar -->
+<div class="w-full flex items-center justify-between gap-space-xs backdrop-blur-xl bg-surface-container-low/75 p-space-xs rounded-full shadow-md">
+<!-- Title & Audio Info Pill -->
+<div class="flex items-center gap-space-xs min-w-0 flex-1 pl-space-xs">
+<span class="material-symbols-outlined text-secondary text-[20px] shrink-0" style="font-variation-settings: 'FILL' 1;">movie</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">Interstellar (2014)</span>
+<span class="font-label-sm text-label-sm text-secondary truncate">4K HEVC HDR10+ • 18.4 GB</span>
+</div>
+</div>
+<!-- Quick Spec Pills -->
+<div class="flex items-center gap-space-xs shrink-0">
+<!-- Audio & Sub Pill -->
+<button class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface hover:bg-surface-bright active:scale-95 transition-all" id="track-selector-btn">
+<span class="material-symbols-outlined text-[14px] text-tertiary">graphic_eq</span>
+<span class="font-label-sm text-label-sm">Atmos 7.1 • EN</span>
+</button>
+<!-- Speed Pill -->
+<button class="px-2 py-1 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm active:scale-90 transition-all" id="speed-btn">
+            1.0x
+          </button>
+<!-- Aspect Ratio Toggle -->
+<button class="w-7 h-7 flex items-center justify-center rounded-full bg-surface-container text-on-surface hover:text-secondary active:scale-90 transition-all" title="Aspect Ratio">
+<span class="material-symbols-outlined text-[16px]">aspect_ratio</span>
+</button>
+<!-- PiP Pop-out -->
+<button class="w-7 h-7 flex items-center justify-center rounded-full bg-surface-container text-on-surface hover:text-secondary active:scale-90 transition-all" title="Picture in Picture">
+<span class="material-symbols-outlined text-[16px]">picture_in_picture_alt</span>
+</button>
+</div>
+</div>
+<!-- Gesture Visual HUD Areas (Center Spanning) -->
+<div class="relative flex-1 flex items-center justify-between px-space-xs py-space-sm pointer-events-none">
+<!-- Left Gesture HUD: Brightness Slider -->
+<div class="pointer-events-auto flex items-center gap-space-xs bg-surface-container-lowest/80 backdrop-blur-xl px-2 py-3 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">brightness_medium</span>
+<!-- Vertical Level Gauge -->
+<div class="relative w-1.5 h-20 bg-surface-variant rounded-full overflow-hidden flex flex-col justify-end">
+<div class="w-full bg-secondary-container rounded-full" style="height: 75%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">75%</span>
+</div>
+</div>
+<!-- Center Double-Tap Seek Ripples Indicator Area -->
+<div class="flex items-center gap-space-xl">
+<!-- Left Seek Trigger visual -->
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-full bg-surface-container-lowest/40 backdrop-blur-md text-on-surface-variant opacity-80 animate-pulse">
+<span class="material-symbols-outlined text-[20px]">keyboard_double_arrow_left</span>
+<span class="font-label-sm text-label-sm">-10s</span>
+</div>
+<!-- Right Seek Trigger visual -->
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-full bg-surface-container-lowest/40 backdrop-blur-md text-on-surface-variant opacity-80 animate-pulse">
+<span class="material-symbols-outlined text-[20px]">keyboard_double_arrow_right</span>
+<span class="font-label-sm text-label-sm">+10s</span>
+</div>
+</div>
+<!-- Right Gesture HUD: Volume Slider -->
+<div class="pointer-events-auto flex items-center gap-space-xs bg-surface-container-lowest/80 backdrop-blur-xl px-2 py-3 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">volume_up</span>
+<!-- Vertical Level Gauge -->
+<div class="relative w-1.5 h-20 bg-surface-variant rounded-full overflow-hidden flex flex-col justify-end">
+<div class="w-full bg-primary-container rounded-full" style="height: 85%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">85%</span>
+</div>
+</div>
+</div>
+<!-- Scrubber & Chapter Docking Floating Thumbnail Preview -->
+<div class="relative w-full flex flex-col gap-1 pointer-events-auto">
+<!-- Floating Thumbnail Box positioned above current playhead (~60%) -->
+<div class="absolute -top-20 left-[58%] -translate-x-1/2 flex flex-col items-center z-30 pointer-events-none drop-shadow-xl">
+<div class="w-24 h-14 rounded-DEFAULT bg-surface-container-highest p-0.5 shadow-xl overflow-hidden relative">
+<div class="w-full h-full bg-cover bg-center rounded-sm" data-alt="A mini film still preview of a spaceship docking into a spinning ring station near Gargantua black hole, high-res details, IMAX framing, dark atmospheric space" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCTCtclKwfVJ6lrriyVw7WKn89alHW-W0ky9hRYBL1BtMQLTxiwjM_geiXVE4LJpAivJfN3pNbZtS1FcEIpzIpSTHqvCAjDDTAXpnnNjtvRxyYqcN-XbRkFIIgOYN45-B3w0ol76NSp4Cwa1ACAPOnESmZX_Bkro58uk_OIDb5tk0nDIeIEyOkPjlQoIcb9XmfvqAe2CRyGMJqsnc_nJ0geo8BpFUBF2hnMy_H0ocCkEiiMyeQeL6H1')"></div>
+<div class="absolute bottom-1 right-1 bg-surface-container-lowest/80 px-1 py-0.5 rounded text-[9px] font-label-sm text-on-surface">01:42:18</div>
+</div>
+<!-- Micro Arrow Indicator -->
+<div class="w-2 h-2 bg-surface-container-highest rotate-45 -mt-1"></div>
+</div>
+<!-- Scrubber Bar Track -->
+<div class="relative w-full flex items-center py-2 cursor-pointer group" id="scrubber-bar">
+<!-- Background Base Line -->
+<div class="w-full h-1 bg-surface-variant rounded-full relative overflow-visible">
+<!-- Chapter Marker Tick: Docking Scene at 60% -->
+<div class="absolute left-[60%] top-1/2 -translate-y-1/2 w-1.5 h-2.5 bg-secondary-fixed rounded-sm z-10" title="Chapter: The Endurance Docking"></div>
+<!-- Chapter Marker Tick: Wormhole Incursion at 30% -->
+<div class="absolute left-[30%] top-1/2 -translate-y-1/2 w-1 h-2 bg-outline rounded-sm z-10"></div>
+<!-- Buffered Track -->
+<div class="absolute left-0 top-0 h-full bg-surface-bright rounded-full" style="width: 78%;"></div>
+<!-- Played Track with Glow -->
+<div class="absolute left-0 top-0 h-full bg-secondary-container rounded-full shadow-[0_0_12px_rgba(0,227,253,0.8)]" style="width: 60.5%;"></div>
+</div>
+<!-- Active Scrubber Thumb -->
+<div class="absolute left-[60.5%] -translate-x-1/2 w-4 h-4 rounded-full bg-secondary-container shadow-[0_0_16px_rgba(0,227,253,1)] flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-on-secondary-container"></div>
+</div>
+</div>
+<!-- Timestamps & Chapter Title -->
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm px-1">
+<div class="flex items-center gap-1.5">
+<span class="text-on-surface font-medium">01:42:18</span>
+<span class="text-outline-variant">/</span>
+<span>02:49:04</span>
+</div>
+<div class="flex items-center gap-1 text-secondary truncate max-w-[160px]">
+<span class="material-symbols-outlined text-[13px]">bookmark</span>
+<span class="truncate">Ch 12: Spinning Dock</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Physical Transport Hardware Island (Material 3 Expressive Glass) -->
+<div class="mt-space-sm w-full bg-surface-container-low/95 backdrop-blur-2xl rounded-lg p-space-sm flex flex-col gap-space-sm shadow-xl">
+<!-- Floating Action Cluster -->
+<div class="w-full flex items-center justify-between gap-space-xs">
+<!-- Screen Lock Button -->
+<button class="w-11 h-11 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface active:scale-95 transition-all" id="lock-btn" title="Lock Controls">
+<span class="material-symbols-outlined text-[20px]">lock_open</span>
+</button>
+<!-- Center Playback Cluster -->
+<div class="flex items-center gap-space-xs sm:gap-space-sm">
+<!-- Previous Chapter -->
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[22px]">skip_previous</span>
+</button>
+<!-- Rewind 10s -->
+<button class="w-11 h-11 flex items-center justify-center rounded-full bg-surface-container text-on-surface hover:text-secondary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[20px]">replay_10</span>
+</button>
+<!-- Primary Elevated Play/Pause Button with Bioluminescent Glow -->
+<button class="w-16 h-16 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container shadow-[0_0_28px_rgba(124,77,255,0.45)] hover:shadow-[0_0_36px_rgba(124,77,255,0.65)] active:scale-95 transition-all" id="main-play-btn">
+<span class="material-symbols-outlined text-[34px]" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<!-- Fast Forward 10s -->
+<button class="w-11 h-11 flex items-center justify-center rounded-full bg-surface-container text-on-surface hover:text-secondary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[20px]">forward_10</span>
+</button>
+<!-- Next Chapter -->
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[22px]">skip_next</span>
+</button>
+</div>
+<!-- Offline Stored Status Tag -->
+<div class="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-tertiary-container/30 text-tertiary" title="Cached on internal storage">
+<span class="material-symbols-outlined text-[16px]">offline_pin</span>
+<span class="hidden xs:inline font-label-sm text-label-sm">Offline</span>
+</div>
+</div>
+<!-- Quick Audio & Convenience Strip -->
+<div class="w-full flex items-center justify-between gap-space-xs pt-space-xs bg-surface-container/50 px-space-sm py-2 rounded-full">
+<!-- Background Audio Mode -->
+<button class="flex items-center gap-1.5 text-on-surface-variant hover:text-secondary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">headphones</span>
+<span class="font-label-sm text-label-sm">Audio Mode</span>
+</button>
+<!-- A-B Loop Utility -->
+<button class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface active:scale-95 transition-all" id="ab-loop-btn">
+<span class="material-symbols-outlined text-[16px]">sync_alt</span>
+<span class="font-label-sm text-label-sm">Loop A-B</span>
+</button>
+<!-- Sleep Timer -->
+<button class="flex items-center gap-1.5 text-on-surface-variant hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">bedtime</span>
+<span class="font-label-sm text-label-sm">45m</span>
+</button>
+<!-- Night Enhancement -->
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-tertiary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">graphic_eq</span>
+<span class="font-label-sm text-label-sm">Night EQ</span>
+</button>
+</div>
+</div>
+<!-- Scene Details & Contextual Cue Card -->
+<div class="mt-space-sm w-full bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Aura Pro Cinema Engine</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-container px-2 py-0.5 rounded-full">Rec.2020 Color</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Gargantua Accretion Dynamics</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Hans Zimmer • "No Time For Caution" • 24-bit 96kHz</span>
+</div>
+<button class="w-9 h-9 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface active:scale-95">
+<span class="material-symbols-outlined text-[20px]">queue_music</span>
+</button>
+</div>
+</div>
+<!-- Client-side HUD Interactions Script -->
+<script>
+    (function initVideoHUD() {
+      const playBtn = document.getElementById('main-play-btn');
+      const lockBtn = document.getElementById('lock-btn');
+      const speedBtn = document.getElementById('speed-btn');
+      const abBtn = document.getElementById('ab-loop-btn');
+
+      let isPlaying = true;
+      let isLocked = false;
+      let speedIdx = 0;
+      const speeds = ['1.0x', '1.25x', '1.5x', '2.0x', '0.75x'];
+
+      if (playBtn) {
+        playBtn.addEventListener('click', () => {
+          isPlaying = !isPlaying;
+          const icon = playBtn.querySelector('.material-symbols-outlined');
+          if (icon) {
+            icon.textContent = isPlaying ? 'pause' : 'play_arrow';
+          }
+        });
+      }
+
+      if (lockBtn) {
+        lockBtn.addEventListener('click', () => {
+          isLocked = !isLocked;
+          const icon = lockBtn.querySelector('.material-symbols-outlined');
+          if (icon) {
+            icon.textContent = isLocked ? 'lock' : 'lock_open';
+          }
+          lockBtn.classList.toggle('text-secondary', isLocked);
+        });
+      }
+
+      if (speedBtn) {
+        speedBtn.addEventListener('click', () => {
+          speedIdx = (speedIdx + 1) % speeds.length;
+          speedBtn.textContent = speeds[speedIdx];
+        });
+      }
+
+      if (abBtn) {
+        abBtn.addEventListener('click', () => {
+          abBtn.classList.toggle('text-secondary');
+          abBtn.classList.toggle('bg-secondary-container/20');
+        });
+      }
+    })();
+  </script>
+</div></main><div class="fixed bottom-0 w-full z-50 pb-safe pointer-events-none flex justify-center items-center pb-2"><div class="w-32 h-1 rounded-full bg-outline-variant/40"></div></div></body></html>

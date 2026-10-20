@@ -1,0 +1,15 @@
+*.iml
+.gradle
+/local.properties
+.idea/
+.DS_Store
+build/
+app/build/
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+/clean_home.png
+/emulator_screen_*.png
+/final_screen_*.png
+/screen_1_raw.json
