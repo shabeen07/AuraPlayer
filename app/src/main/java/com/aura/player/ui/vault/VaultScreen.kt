@@ -2,6 +2,7 @@ package com.aura.player.ui.vault
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -20,15 +21,24 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Headphones
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material.icons.filled.WifiTethering
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -62,11 +72,10 @@ import com.aura.player.theme.AuraSurfaceContainer
 import com.aura.player.theme.AuraSurfaceContainerHigh
 import com.aura.player.theme.AuraSurfaceContainerHighest
 import com.aura.player.theme.AuraSurfaceContainerLow
-import com.aura.player.theme.AuraSurfaceContainerLowest
-import com.aura.player.theme.AuraSurfaceVariant
 import com.aura.player.theme.AuraTertiary
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VaultScreen(
     repository: DataRepository,
@@ -75,6 +84,17 @@ fun VaultScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    var isUnlocked by remember { mutableStateOf(false) }
+    var showSyncSheet by remember { mutableStateOf(false) }
+
+    if (!isUnlocked) {
+        VaultLockScreen(
+            onUnlocked = { isUnlocked = true },
+            modifier = modifier
+        )
+        return
+    }
 
     val vaultItems by repository.vaultItems.collectAsState()
     val stats by repository.storageStats.collectAsState()
@@ -109,34 +129,77 @@ fun VaultScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(9.dp)
+                        .size(10.dp)
                         .clip(CircleShape)
                         .background(AuraTertiary)
                 )
                 Text(
-                    text = "Media Library & Vault",
+                    text = "Encrypted Vault",
                     color = AuraOnSurface,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
+                Box(
+                    modifier = Modifier
+                        .background(AuraSurfaceContainerHighest, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = "ENCRYPTED",
+                        color = AuraSecondary,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
 
-            IconButton(
-                onClick = {
-                    scope.launch {
-                        repository.refreshLocalMedia()
-                    }
-                },
-                modifier = Modifier
-                    .size(38.dp)
-                    .background(AuraSurfaceContainer, CircleShape)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = "Refresh",
-                    tint = AuraOnSurfaceVariant,
-                    modifier = Modifier.size(18.dp)
-                )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                // Direct Wi-Fi P2P Sync Button
+                IconButton(
+                    onClick = { showSyncSheet = true },
+                    modifier = Modifier
+                        .size(38.dp)
+                        .background(AuraSurfaceContainerHigh, CircleShape)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.WifiTethering,
+                        contentDescription = "Direct Sync",
+                        tint = AuraSecondary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+
+                // Lock Vault Button
+                IconButton(
+                    onClick = { isUnlocked = false },
+                    modifier = Modifier
+                        .size(38.dp)
+                        .background(AuraSurfaceContainerHigh, CircleShape)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "Lock Vault",
+                        tint = AuraPrimary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+
+                // Refresh Button
+                IconButton(
+                    onClick = {
+                        scope.launch { repository.refreshLocalMedia() }
+                    },
+                    modifier = Modifier
+                        .size(38.dp)
+                        .background(AuraSurfaceContainerHigh, CircleShape)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Refresh",
+                        tint = AuraOnSurfaceVariant,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
             }
         }
 
@@ -156,7 +219,7 @@ fun VaultScreen(
                 ) {
                     Column {
                         Text(
-                            text = "LOCAL DEVICE STORAGE",
+                            text = "SECURE LOCAL STORAGE",
                             color = AuraOnSurfaceVariant,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
@@ -202,6 +265,24 @@ fun VaultScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
+                }
+
+                // Multi-Segment Physical Meter
+                val usedRatio = (stats.usedGb / stats.totalGb.coerceAtLeast(1f)).coerceIn(0f, 1f)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(10.dp)
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(AuraSurfaceContainerHighest)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(fraction = usedRatio)
+                            .height(10.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(AuraPrimary)
+                    )
                 }
 
                 // Storage Legend Row
@@ -284,7 +365,7 @@ fun VaultScreen(
                             modifier = Modifier.size(36.dp)
                         )
                         Text(
-                            text = "No files in $selectedFilter",
+                            text = "No private files in $selectedFilter",
                             color = AuraOnSurfaceVariant,
                             fontSize = 13.sp
                         )
@@ -316,6 +397,105 @@ fun VaultScreen(
         }
 
         Spacer(modifier = Modifier.height(84.dp))
+    }
+
+    // Direct Sync Wi-Fi Modal Bottom Sheet
+    if (showSyncSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showSyncSheet = false },
+            sheetState = rememberModalBottomSheetState(),
+            containerColor = AuraSurfaceContainer
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(AuraPrimaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.WifiTethering,
+                                contentDescription = "P2P Sync",
+                                tint = AuraOnPrimaryContainer,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                        Column {
+                            Text(
+                                text = "Wi-Fi Direct Peer Sync",
+                                color = AuraOnSurface,
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = "Encrypted local offline transfer (up to 45 MB/s)",
+                                color = AuraOnSurfaceVariant,
+                                fontSize = 11.sp
+                            )
+                        }
+                    }
+                    IconButton(onClick = { showSyncSheet = false }) {
+                        Icon(imageVector = Icons.Default.Close, contentDescription = "Close", tint = AuraOnSurfaceVariant)
+                    }
+                }
+
+                // Discovered Trusted Devices
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        text = "TRUSTED NEARBY PEERS",
+                        color = AuraSecondary,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    )
+
+                    listOf(
+                        "AuraPad Pro (Direct Wi-Fi 6)" to "Signal: Excellent • Ready",
+                        "AuraDeck X1 (Encrypted Sync)" to "Signal: Good • Paired",
+                        "Pixel Studio Lab" to "Ready for batch ingest"
+                    ).forEach { (peerName, peerDesc) ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(AuraSurfaceContainerHigh)
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(text = peerName, color = AuraOnSurface, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                                Text(text = peerDesc, color = AuraOnSurfaceVariant, fontSize = 11.sp)
+                            }
+                            Button(
+                                onClick = { showSyncSheet = false },
+                                colors = ButtonDefaults.buttonColors(containerColor = AuraPrimaryContainer),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text(text = "Connect", fontSize = 11.sp, color = AuraOnPrimaryContainer)
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+        }
     }
 }
 

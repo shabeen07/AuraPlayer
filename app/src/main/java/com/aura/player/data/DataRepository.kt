@@ -32,6 +32,7 @@ interface DataRepository {
     val storageStats: StateFlow<StorageStats>
     val playerState: StateFlow<PlayerState>
     val playerController: PlayerController
+    val audioFxController: com.aura.player.audio.AudioFxController
     val hasStoragePermission: StateFlow<Boolean>
 
     suspend fun refreshLocalMedia()
@@ -55,6 +56,7 @@ class DefaultDataRepository(private val context: Context) : DataRepository {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private val localDataSource = LocalMediaDataSource(context)
     override val playerController: PlayerController = PlayerController(context)
+    override val audioFxController: com.aura.player.audio.AudioFxController = playerController.audioFxController
 
     private val _hasStoragePermission = MutableStateFlow(PermissionUtils.hasStoragePermission(context))
     override val hasStoragePermission: StateFlow<Boolean> = _hasStoragePermission.asStateFlow()

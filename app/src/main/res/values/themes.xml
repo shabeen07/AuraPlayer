@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base application theme -->
+    <style name="Theme.AuraPlayer" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">#0F0E17</item>
+        <item name="android:navigationBarColor">#0F0E17</item>
+        <item name="android:windowBackground">#0F0E17</item>
+    </style>
 
-    <style name="Theme.AuraPlayer" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Splash Screen Starting Theme (Android 12+) -->
+    <style name="Theme.AuraPlayer.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#0F0E17</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.AuraPlayer</item>
+    </style>
 </resources>

@@ -11,17 +11,27 @@ import androidx.navigation3.ui.NavDisplay
 import com.aura.player.data.DefaultDataRepository
 import com.aura.player.ui.main.MainShellScreen
 import com.aura.player.ui.player.PlayerScreen
+import com.aura.player.ui.splash.SplashScreen
 
 @Composable
 fun MainNavigation() {
     val context = LocalContext.current.applicationContext
     val repository = remember { DefaultDataRepository(context) }
-    val backStack = rememberNavBackStack(HomeNavKey)
+    val backStack = rememberNavBackStack(SplashNavKey)
 
     NavDisplay(
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         entryProvider = entryProvider {
+            entry<SplashNavKey> {
+                SplashScreen(
+                    onSplashFinished = {
+                        backStack.remove(SplashNavKey)
+                        backStack.add(HomeNavKey)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
             entry<HomeNavKey> {
                 MainShellScreen(
                     repository = repository,

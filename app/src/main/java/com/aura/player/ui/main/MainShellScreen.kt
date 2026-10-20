@@ -21,7 +21,12 @@ import com.aura.player.ui.components.AuraBottomNav
 import com.aura.player.ui.components.AuraHeader
 import com.aura.player.ui.components.AuraTab
 import com.aura.player.ui.components.MiniPlayerDock
+import com.aura.player.ui.components.modals.CastPickerSheet
+import com.aura.player.ui.components.modals.ProfileDiagnosticsSheet
+import com.aura.player.ui.components.modals.QuickSearchSheet
 import com.aura.player.ui.home.HomeScreen
+import com.aura.player.ui.library.LibraryScreen
+import com.aura.player.ui.settings.SettingsScreen
 import com.aura.player.ui.vault.VaultScreen
 
 @Composable
@@ -31,6 +36,9 @@ fun MainShellScreen(
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableStateOf(AuraTab.HOME) }
+    var showSearchSheet by remember { mutableStateOf(false) }
+    var showCastSheet by remember { mutableStateOf(false) }
+    var showProfileSheet by remember { mutableStateOf(false) }
 
     val subtitle = when (selectedTab) {
         AuraTab.HOME -> "Home"
@@ -51,9 +59,9 @@ fun MainShellScreen(
             AuraHeader(
                 subtitle = subtitle,
                 modifier = Modifier.statusBarsPadding(),
-                onSearchClick = { },
-                onCastClick = { },
-                onProfileClick = { }
+                onSearchClick = { showSearchSheet = true },
+                onCastClick = { showCastSheet = true },
+                onProfileClick = { showProfileSheet = true }
             )
 
             // Content Area based on selected tab
@@ -71,7 +79,14 @@ fun MainShellScreen(
                             modifier = Modifier.fillMaxSize()
                         )
                     }
-                    AuraTab.VAULT, AuraTab.LIBRARY -> {
+                    AuraTab.LIBRARY -> {
+                        LibraryScreen(
+                            repository = repository,
+                            onPlayItem = onNavigateToPlayer,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                    AuraTab.VAULT -> {
                         VaultScreen(
                             repository = repository,
                             onPlayItem = onNavigateToPlayer,
@@ -79,10 +94,8 @@ fun MainShellScreen(
                         )
                     }
                     AuraTab.SETTINGS -> {
-                        HomeScreen(
+                        SettingsScreen(
                             repository = repository,
-                            onNavigateToPlayer = onNavigateToPlayer,
-                            onNavigateToVault = { selectedTab = AuraTab.VAULT },
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -103,6 +116,26 @@ fun MainShellScreen(
                 selectedTab = selectedTab,
                 onTabSelected = { selectedTab = it }
             )
+        }
+
+        // Header Action Sheets
+        if (showSearchSheet) {
+            QuickSearchSheet(
+                repository = repository,
+                onMediaSelected = {
+                    repository.playMedia(it)
+                    onNavigateToPlayer()
+                },
+                onDismiss = { showSearchSheet = false }
+            )
+        }
+
+        if (showCastSheet) {
+            CastPickerSheet(onDismiss = { showCastSheet = false })
+        }
+
+        if (showProfileSheet) {
+            ProfileDiagnosticsSheet(onDismiss = { showProfileSheet = false })
         }
     }
 }

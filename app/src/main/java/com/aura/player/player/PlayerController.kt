@@ -9,6 +9,7 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import com.aura.player.audio.AudioFxController
 import com.aura.player.data.model.MediaItem
 import com.aura.player.data.model.PlayerState
 import com.aura.player.data.model.formatDuration
@@ -22,7 +23,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class PlayerController(context: Context) {
+class PlayerController(
+    context: Context,
+    val audioFxController: AudioFxController = AudioFxController()
+) {
 
     private val applicationContext = context.applicationContext
     private val scope = CoroutineScope(Dispatchers.Main + Job())
@@ -43,6 +47,10 @@ class PlayerController(context: Context) {
 
     init {
         exoPlayer.addListener(object : Player.Listener {
+            override fun onAudioSessionIdChanged(audioSessionId: Int) {
+                audioFxController.attachAudioSession(audioSessionId)
+            }
+
             override fun onPlaybackStateChanged(playbackState: Int) {
                 when (playbackState) {
                     Player.STATE_BUFFERING -> {
