@@ -396,7 +396,7 @@ fun VaultScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(84.dp))
+        Spacer(modifier = Modifier.height(110.dp))
     }
 
     // Direct Sync Wi-Fi Modal Bottom Sheet

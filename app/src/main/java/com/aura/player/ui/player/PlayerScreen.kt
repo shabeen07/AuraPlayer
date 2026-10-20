@@ -387,6 +387,7 @@ fun PlayerScreen(
                     val currentSliderProgress = if (isDraggingSeek) scrubProgress else playerState.progress
                     Slider(
                         value = currentSliderProgress,
+                        enabled = !isLocked,
                         onValueChange = {
                             isDraggingSeek = true
                             scrubProgress = it
@@ -396,8 +397,8 @@ fun PlayerScreen(
                             repository.setPlaybackProgress(scrubProgress)
                         },
                         colors = SliderDefaults.colors(
-                            thumbColor = AuraPrimary,
-                            activeTrackColor = AuraPrimary,
+                            thumbColor = if (isLocked) AuraOnSurfaceVariant else AuraPrimary,
+                            activeTrackColor = if (isLocked) AuraSurfaceContainerHighest else AuraPrimary,
                             inactiveTrackColor = AuraSurfaceVariant
                         ),
                         modifier = Modifier.fillMaxWidth()
@@ -415,8 +416,8 @@ fun PlayerScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = playerState.chapterTitle,
-                            color = AuraTertiary,
+                            text = if (isLocked) "CONTROLS LOCKED" else playerState.chapterTitle,
+                            color = if (isLocked) AuraSecondary else AuraTertiary,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -438,18 +439,19 @@ fun PlayerScreen(
                         onClick = { isLocked = !isLocked },
                         modifier = Modifier
                             .size(38.dp)
-                            .background(AuraSurfaceContainer, CircleShape)
+                            .background(if (isLocked) AuraSecondaryContainer else AuraSurfaceContainer, CircleShape)
                     ) {
                         Icon(
                             imageVector = if (isLocked) Icons.Default.Lock else Icons.Default.LockOpen,
                             contentDescription = "Lock",
-                            tint = if (isLocked) AuraSecondary else AuraOnSurfaceVariant,
+                            tint = if (isLocked) AuraSurface else AuraOnSurfaceVariant,
                             modifier = Modifier.size(18.dp)
                         )
                     }
 
                     IconButton(
-                        onClick = { repository.skipBackward(10) },
+                        onClick = { if (!isLocked) repository.skipBackward(10) },
+                        enabled = !isLocked,
                         modifier = Modifier
                             .size(42.dp)
                             .background(AuraSurfaceContainer, CircleShape)
@@ -457,7 +459,7 @@ fun PlayerScreen(
                         Icon(
                             imageVector = Icons.Default.Replay10,
                             contentDescription = "Rewind 10s",
-                            tint = AuraOnSurface,
+                            tint = if (isLocked) AuraOnSurfaceVariant.copy(alpha = 0.4f) else AuraOnSurface,
                             modifier = Modifier.size(22.dp)
                         )
                     }
@@ -466,22 +468,28 @@ fun PlayerScreen(
                     Box(
                         modifier = Modifier
                             .size(62.dp)
-                            .shadow(16.dp, CircleShape, ambientColor = AuraPrimaryContainer, spotColor = AuraPrimaryContainer)
+                            .shadow(
+                                elevation = if (isLocked) 4.dp else 16.dp,
+                                shape = CircleShape,
+                                ambientColor = AuraPrimaryContainer,
+                                spotColor = AuraPrimaryContainer
+                            )
                             .clip(CircleShape)
-                            .background(AuraPrimaryContainer)
-                            .clickable { repository.togglePlayPause() },
+                            .background(if (isLocked) AuraSurfaceContainerHighest else AuraPrimaryContainer)
+                            .clickable(enabled = !isLocked) { repository.togglePlayPause() },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = if (playerState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                             contentDescription = "Play/Pause",
-                            tint = AuraOnPrimaryContainer,
+                            tint = if (isLocked) AuraOnSurfaceVariant else AuraOnPrimaryContainer,
                             modifier = Modifier.size(32.dp)
                         )
                     }
 
                     IconButton(
-                        onClick = { repository.skipForward(10) },
+                        onClick = { if (!isLocked) repository.skipForward(10) },
+                        enabled = !isLocked,
                         modifier = Modifier
                             .size(42.dp)
                             .background(AuraSurfaceContainer, CircleShape)
@@ -489,16 +497,19 @@ fun PlayerScreen(
                         Icon(
                             imageVector = Icons.Default.Forward10,
                             contentDescription = "Forward 10s",
-                            tint = AuraOnSurface,
+                            tint = if (isLocked) AuraOnSurfaceVariant.copy(alpha = 0.4f) else AuraOnSurface,
                             modifier = Modifier.size(22.dp)
                         )
                     }
 
                     IconButton(
                         onClick = {
-                            val nextVol = if (playerState.volume > 0f) 0f else 1f
-                            repository.updateVolume(nextVol)
+                            if (!isLocked) {
+                                val nextVol = if (playerState.volume > 0f) 0f else 1f
+                                repository.updateVolume(nextVol)
+                            }
                         },
+                        enabled = !isLocked,
                         modifier = Modifier
                             .size(38.dp)
                             .background(AuraSurfaceContainer, CircleShape)
@@ -506,7 +517,7 @@ fun PlayerScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.VolumeUp,
                             contentDescription = "Mute/Unmute",
-                            tint = if (playerState.volume > 0f) AuraPrimary else AuraOnSurfaceVariant,
+                            tint = if (isLocked) AuraOnSurfaceVariant.copy(alpha = 0.4f) else if (playerState.volume > 0f) AuraPrimary else AuraOnSurfaceVariant,
                             modifier = Modifier.size(18.dp)
                         )
                     }

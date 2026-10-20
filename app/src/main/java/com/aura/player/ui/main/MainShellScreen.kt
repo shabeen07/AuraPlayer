@@ -1,5 +1,10 @@
 package com.aura.player.ui.main
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,34 +75,44 @@ fun MainShellScreen(
                     .weight(1f)
                     .fillMaxWidth()
             ) {
-                when (selectedTab) {
-                    AuraTab.HOME -> {
-                        HomeScreen(
-                            repository = repository,
-                            onNavigateToPlayer = onNavigateToPlayer,
-                            onNavigateToVault = { selectedTab = AuraTab.VAULT },
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                    AuraTab.LIBRARY -> {
-                        LibraryScreen(
-                            repository = repository,
-                            onPlayItem = onNavigateToPlayer,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                    AuraTab.VAULT -> {
-                        VaultScreen(
-                            repository = repository,
-                            onPlayItem = onNavigateToPlayer,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                    AuraTab.SETTINGS -> {
-                        SettingsScreen(
-                            repository = repository,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                AnimatedContent(
+                    targetState = selectedTab,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(220)) togetherWith
+                                fadeOut(animationSpec = tween(180))
+                    },
+                    label = "tabTransition",
+                    modifier = Modifier.fillMaxSize()
+                ) { targetTab ->
+                    when (targetTab) {
+                        AuraTab.HOME -> {
+                            HomeScreen(
+                                repository = repository,
+                                onNavigateToPlayer = onNavigateToPlayer,
+                                onNavigateToVault = { selectedTab = AuraTab.VAULT },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                        AuraTab.LIBRARY -> {
+                            LibraryScreen(
+                                repository = repository,
+                                onPlayItem = onNavigateToPlayer,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                        AuraTab.VAULT -> {
+                            VaultScreen(
+                                repository = repository,
+                                onPlayItem = onNavigateToPlayer,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                        AuraTab.SETTINGS -> {
+                            SettingsScreen(
+                                repository = repository,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                     }
                 }
 

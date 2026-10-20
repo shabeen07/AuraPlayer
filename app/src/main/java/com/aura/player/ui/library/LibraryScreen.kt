@@ -336,7 +336,7 @@ fun LibraryScreen(
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(bottom = 88.dp)
+                contentPadding = PaddingValues(bottom = 110.dp)
             ) {
                 items(sortedList, key = { it.id }) { item ->
                     LibraryMediaCard(

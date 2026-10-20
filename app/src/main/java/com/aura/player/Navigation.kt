@@ -1,5 +1,11 @@
 package com.aura.player
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -45,6 +51,47 @@ fun MainNavigation() {
                     onNavigateBack = { backStack.removeLastOrNull() },
                     modifier = Modifier.fillMaxSize()
                 )
+            }
+        },
+        transitionSpec = {
+            if (targetState.key == PlayerNavKey) {
+                // Expanding player: slide up from bottom with subtle fade
+                (slideInVertically(
+                    initialOffsetY = { it },
+                    animationSpec = tween(350)
+                ) + fadeIn(animationSpec = tween(300))) togetherWith
+                        fadeOut(animationSpec = tween(250))
+            } else {
+                // Screen to screen crossfade (e.g. splash to home)
+                fadeIn(animationSpec = tween(350)) togetherWith
+                        fadeOut(animationSpec = tween(300))
+            }
+        },
+        popTransitionSpec = {
+            if (initialState.key == PlayerNavKey) {
+                // Collapsing player: slide down to bottom with fade
+                fadeIn(animationSpec = tween(250)) togetherWith (
+                    slideOutVertically(
+                        targetOffsetY = { it },
+                        animationSpec = tween(300)
+                    ) + fadeOut(animationSpec = tween(250))
+                )
+            } else {
+                fadeIn(animationSpec = tween(300)) togetherWith
+                        fadeOut(animationSpec = tween(300))
+            }
+        },
+        predictivePopTransitionSpec = { _ ->
+            if (initialState.key == PlayerNavKey) {
+                fadeIn(animationSpec = tween(250)) togetherWith (
+                    slideOutVertically(
+                        targetOffsetY = { it },
+                        animationSpec = tween(300)
+                    ) + fadeOut(animationSpec = tween(250))
+                )
+            } else {
+                fadeIn(animationSpec = tween(300)) togetherWith
+                        fadeOut(animationSpec = tween(300))
             }
         }
     )

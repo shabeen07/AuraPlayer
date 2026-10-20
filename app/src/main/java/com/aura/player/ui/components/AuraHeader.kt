@@ -23,12 +23,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BatteryChargingFull
 import androidx.compose.material.icons.filled.Cast
-import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.SignalCellular4Bar
-import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -77,56 +73,11 @@ fun AuraHeader(
             .fillMaxWidth()
             .background(AuraSurface.copy(alpha = 0.95f))
     ) {
-        // Status Bar Row
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "09:41",
-                color = AuraOnSurface,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.CloudDone,
-                    contentDescription = "Cloud Connected",
-                    tint = AuraTertiary,
-                    modifier = Modifier.size(14.dp)
-                )
-                Icon(
-                    imageVector = Icons.Default.Wifi,
-                    contentDescription = "Wi-Fi",
-                    tint = AuraOnSurfaceVariant,
-                    modifier = Modifier.size(14.dp)
-                )
-                Icon(
-                    imageVector = Icons.Default.SignalCellular4Bar,
-                    contentDescription = "Cellular",
-                    tint = AuraOnSurfaceVariant,
-                    modifier = Modifier.size(14.dp)
-                )
-                Icon(
-                    imageVector = Icons.Default.BatteryChargingFull,
-                    contentDescription = "Battery",
-                    tint = AuraOnSurfaceVariant,
-                    modifier = Modifier.size(14.dp)
-                )
-            }
-        }
-
         // Main App Header Bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

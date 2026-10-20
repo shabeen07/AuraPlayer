@@ -57,7 +57,7 @@ fun AuraBottomNav(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(68.dp)
+                .height(64.dp)
                 .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
@@ -87,22 +87,6 @@ fun AuraBottomNav(
                     )
                 }
             }
-        }
-
-        // Center bottom home pill handle
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 6.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .width(110.dp)
-                    .height(4.dp)
-                    .clip(RoundedCornerShape(2.dp))
-                    .background(AuraOutlineVariant.copy(alpha = 0.4f))
-            )
         }
     }
 }
