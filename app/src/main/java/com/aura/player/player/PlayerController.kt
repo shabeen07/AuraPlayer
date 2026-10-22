@@ -93,6 +93,11 @@ class PlayerController(
 
             override fun onPlayerError(error: PlaybackException) {
                 val errorMsg = error.localizedMessage ?: "Playback error: ${error.errorCodeName}"
+                try {
+                    com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance().recordException(error)
+                } catch (_: Exception) {
+                    // Safe fallback if Firebase is not initialized or offline
+                }
                 _playerState.value = _playerState.value.copy(
                     isBuffering = false,
                     isPlaying = false,

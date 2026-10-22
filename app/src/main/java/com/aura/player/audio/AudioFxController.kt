@@ -54,6 +54,9 @@ class AudioFxController {
                 }
             }
         } catch (e: Exception) {
+            try {
+                com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance().recordException(e)
+            } catch (_: Exception) {}
             Log.w("AudioFxController", "Equalizer init warning: ${e.message}")
         }
 

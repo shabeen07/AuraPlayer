@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "124161078331",
+    "project_id": "auraplayer-shabeen",
+    "storage_bucket": "auraplayer-shabeen.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124161078331:android:ddc489d92a366a397dd81e",
+        "android_client_info": {
+          "package_name": "dev.shabeen.aura.player"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU_vTKOmOI4YGNRyiuUmNEdXMm3JmX-_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124161078331:android:598e60b56b2dfeb07dd81e",
+        "android_client_info": {
+          "package_name": "dev.shabeen.aura.player.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU_vTKOmOI4YGNRyiuUmNEdXMm3JmX-_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

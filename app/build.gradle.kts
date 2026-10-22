@@ -5,6 +5,9 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.google.services)
+  alias(libs.plugins.firebase.crashlytics)
+  alias(libs.plugins.firebase.appdistribution)
 }
 
 val versionPropsFile = rootProject.file("version.properties")
@@ -26,16 +29,39 @@ android {
     namespace = "com.aura.player"
     compileSdk = 36
     defaultConfig {
-        applicationId = "com.example.auraplayer"
+        applicationId = "dev.shabeen.aura.player"
         minSdk = 24
         targetSdk = 36
         versionCode = appVersionCode
         versionName = appVersionName
+        manifestPlaceholders["appName"] = "Aura Player"
+    }
+
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            manifestPlaceholders["appName"] = "Aura Player (DEV)"
+            configure<com.google.firebase.appdistribution.gradle.AppDistributionExtension> {
+                appId = "1:124161078331:android:598e60b56b2dfeb07dd81e"
+                artifactType = "APK"
+                groups = "internal-testers"
+                testers = "shabeenmhmd07@gmail.com"
+                releaseNotes = "Aura Player DEV test build with dual-environment architecture, Crashlytics, and AudioFx engine."
+            }
+        }
+        create("pro") {
+            dimension = "environment"
+            manifestPlaceholders["appName"] = "Aura Player"
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            isCrunchPngs = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -111,4 +137,10 @@ dependencies {
   // Coil
   implementation(libs.coil.compose)
   implementation(libs.coil.video)
+
+  // Firebase BoM & services
+  val firebaseBom = platform(libs.firebase.bom)
+  implementation(firebaseBom)
+  implementation(libs.firebase.analytics)
+  implementation(libs.firebase.crashlytics)
 }
