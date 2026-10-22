@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.0.0] - 2026-10-22
+## [1.0.1] - 2026-10-22
 
 ### Added
 - **Full Video Player Suite**:
@@ -26,18 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Default video aspect ratio options (`Fit / Aspect`, `Zoom / Crop`, `Fill / Stretch`).
   - Adjustable subtitle font size slider (12sp – 24sp).
 - **Automated Agent Delivery Skills**:
-  - `.agents/skills/deliver-dev`: One-action deployment of the `devDebug` build to Firebase App Distribution for tester group `internal-testers` (`shabeenmhmd07@gmail.com`).
+  - `.agents/skills/deliver-dev`: One-action deployment of the `devDebug` build to Firebase App Distribution with automated release branch (`release/v<version>-dev`), semantic versioning, and git tag creation.
   - `.agents/skills/deliver-pro`: Production release packaging and validation for `proRelease` signed artifacts.
 - **Dual-Environment Architecture (`dev` & `pro`)**:
   - Independent package identities (`dev.shabeen.aura.player.dev` and `dev.shabeen.aura.player`).
   - Distinct app branding ("Aura Player (DEV)" vs "Aura Player").
   - Centralized Firebase integration (`google-services.json`), Firebase Crashlytics crash reporting, and Firebase App Distribution Gradle plugin.
-- **Core Media & Audio Engine**:
-  - ExoPlayer / AndroidX Media3 streaming engine supporting local storage media, progressive MP4/MKV, and adaptive HLS streams (`.m3u8`).
-  - 5-band Graphic Equalizer attached to the active Media3 audio session with custom presets (Rock, Pop, Jazz, Electronic, Bass Boost, Vocal, Flat).
-  - Virtualizer / Spatial 3D binaural headphone audio enhancement.
-  - Secure Media Vault protected by 4-digit PIN authentication.
-  - Local MediaStore indexing for device audio and video files.
 
 ### Changed
 - **Whole-App UI Revamp & Simplification**:
@@ -54,9 +48,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.1.0] - 2026-10-20
+## [1.0.0] - 2026-10-20
 
 ### Added
-- Initial project scaffolding and baseline Clean Architecture structure.
-- Local media storage permissions and MediaStore query data sources.
-- Basic playback controller, audio focus management, and foundational Compose screens.
+- **Core Media & Audio Engine**:
+  - ExoPlayer / AndroidX Media3 streaming engine supporting local storage media, progressive MP4/MKV, and adaptive HLS streams (`.m3u8`).
+  - 5-band Graphic Equalizer attached to the active Media3 audio session with custom presets (Rock, Pop, Jazz, Electronic, Bass Boost, Vocal, Flat).
+  - Virtualizer / Spatial 3D binaural headphone audio enhancement.
+  - Secure Media Vault protected by 4-digit PIN authentication.
+  - Local MediaStore indexing for device audio and video files.
+- Baseline Clean Architecture scaffolding, navigation shells, and dark minimalist theme.

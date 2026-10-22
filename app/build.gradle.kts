@@ -49,7 +49,7 @@ android {
                 artifactType = "APK"
                 groups = "internal-testers"
                 testers = "shabeenmhmd07@gmail.com"
-                releaseNotes = "Aura Player DEV test build with dual-environment architecture, Crashlytics, and AudioFx engine."
+                releaseNotes = "Aura Player DEV v1.0.1-dev with video suite (immersive fullscreen, touch gestures, subtitles, interactive transcripts), player settings, and Crashlytics."
             }
         }
         create("pro") {
