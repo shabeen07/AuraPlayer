@@ -49,7 +49,7 @@ android {
                 artifactType = "APK"
                 groups = "internal-testers"
                 testers = "shabeenmhmd07@gmail.com"
-                releaseNotes = "Aura Player DEV v1.0.1-dev with video suite (immersive fullscreen, touch gestures, subtitles, interactive transcripts), player settings, and Crashlytics."
+                releaseNotes = "Aura Player DEV v1.0.2-dev with seamless zero-interruption fullscreen video playback, single unified surface view, and revamped mini-player dock UI/UX."
             }
         }
         create("pro") {

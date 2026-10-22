@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.2] - 2026-10-22
+
+### Fixed
+- **Zero-Interruption Fullscreen Playback**: Fixed video playback stoppage and buffering reset when toggling fullscreen landscape by declaring `android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode"` in `MainActivity` and retaining `DataRepository` and `PlayerController` state in `AppViewModel`.
+- **Continuous Single-Surface Player View**: Eliminated dual `PlayerView` unmounting and surface destruction in `PlayerScreen` by leveraging `movableContentOf` to maintain a single continuous decoding surface between portrait container and landscape fullscreen.
+
+### Changed
+- **Revamped Mini-Player Dock UI/UX**:
+  - Streamlined transport controls into a clean two-button cluster (prominent 40dp Play/Pause and 30dp Dismiss), expanding horizontal room for title and subtitle metadata.
+  - Decoupled tap-to-expand from horizontal drag gestures so tapping anywhere on the card immediately navigates to `PlayerScreen`.
+  - Added an edge-to-edge flush micro-progress indicator (2.5dp) docked along the card's bottom edge with a smooth gradient.
+  - Added 16:10 video thumbnail with "VIDEO" badge for video media and an animated 3-bar live equalizer indicator for audio playback.
+  - Applied refined dark glassmorphic styling (`AuraSurfaceContainerHighest`, subtle border, soft drop shadow).
+
+---
+
 ## [1.0.1] - 2026-10-22
 
 ### Added

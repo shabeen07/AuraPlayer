@@ -14,15 +14,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aura.player.data.DefaultDataRepository
 import com.aura.player.ui.main.MainShellScreen
 import com.aura.player.ui.player.PlayerScreen
 import com.aura.player.ui.splash.SplashScreen
 
 @Composable
-fun MainNavigation() {
-    val context = LocalContext.current.applicationContext
-    val repository = remember { DefaultDataRepository(context) }
+fun MainNavigation(
+    appViewModel: AppViewModel = viewModel()
+) {
+    val repository = appViewModel.repository
     val backStack = rememberNavBackStack(SplashNavKey)
 
     NavDisplay(

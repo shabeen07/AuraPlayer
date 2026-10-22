@@ -83,6 +83,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -164,6 +165,18 @@ fun PlayerScreen(
     var showTranscriptModal by remember { mutableStateOf(false) }
     var selectedDetailTab by remember { mutableIntStateOf(0) }
 
+    // Persistent unified video surface that survives fullscreen/portrait layout transitions
+    val videoSurface = remember(repository, resizeMode) {
+        movableContentOf {
+            PlayerSurfaceContent(
+                repository = repository,
+                resizeMode = resizeMode,
+                context = context,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
+
     // Handle Fullscreen insets & orientation
     LaunchedEffect(isFullscreen) {
         if (activity != null && insetsController != null) {
@@ -225,12 +238,7 @@ fun PlayerScreen(
                     .background(Color.Black),
                 contentAlignment = Alignment.Center
             ) {
-                PlayerSurfaceContent(
-                    repository = repository,
-                    resizeMode = resizeMode,
-                    context = context,
-                    modifier = Modifier.fillMaxSize()
-                )
+                videoSurface()
 
                 // Gesture detection surface
                 PlayerGestureSurface(
@@ -431,12 +439,7 @@ fun PlayerScreen(
                         .background(Color.Black),
                     contentAlignment = Alignment.Center
                 ) {
-                    PlayerSurfaceContent(
-                        repository = repository,
-                        resizeMode = resizeMode,
-                        context = context,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    videoSurface()
 
                     // Gestures on portrait viewport
                     PlayerGestureSurface(
@@ -891,8 +894,12 @@ private fun PlayerSurfaceContent(
                 }
             },
             update = { view ->
-                view.player = repository.playerController.exoPlayer
-                view.resizeMode = resizeMode
+                if (view.player != repository.playerController.exoPlayer) {
+                    view.player = repository.playerController.exoPlayer
+                }
+                if (view.resizeMode != resizeMode) {
+                    view.resizeMode = resizeMode
+                }
             },
             modifier = modifier
         )
