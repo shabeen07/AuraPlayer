@@ -7,11 +7,16 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem as ExoMediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.Tracks
+import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.aura.player.audio.AudioFxController
 import com.aura.player.data.model.MediaItem
+import com.aura.player.data.model.MediaTrackInfo
+import com.aura.player.data.model.PlayerPreferences
 import com.aura.player.data.model.PlayerState
+import com.aura.player.data.model.TranscriptSegment
 import com.aura.player.data.model.formatDuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -61,10 +66,16 @@ class PlayerController(
                     }
                     Player.STATE_READY -> {
                         val duration = exoPlayer.duration.coerceAtLeast(0L)
+                        val currentTranscripts = if (_playerState.value.transcriptSegments.isEmpty()) {
+                            generateSampleTranscripts(duration, _playerState.value.title)
+                        } else {
+                            _playerState.value.transcriptSegments
+                        }
                         _playerState.value = _playerState.value.copy(
                             isBuffering = false,
                             durationMs = duration,
                             totalTime = formatDuration(duration),
+                            transcriptSegments = currentTranscripts,
                             errorMessage = null
                         )
                     }
@@ -104,6 +115,47 @@ class PlayerController(
                     errorMessage = errorMsg
                 )
             }
+
+            override fun onTracksChanged(tracks: Tracks) {
+                val subtitles = mutableListOf<MediaTrackInfo>()
+                val audios = mutableListOf<MediaTrackInfo>()
+                val videos = mutableListOf<MediaTrackInfo>()
+
+                for (group in tracks.groups) {
+                    for (i in 0 until group.length) {
+                        val format = group.getTrackFormat(i)
+                        val isSelected = group.isTrackSelected(i)
+                        val id = format.id ?: "${group.type}_$i"
+                        val label = format.label ?: format.language ?: "Track ${i + 1}"
+                        val trackInfo = MediaTrackInfo(
+                            id = id,
+                            label = label,
+                            language = format.language,
+                            isSelected = isSelected,
+                            formatInfo = "${format.sampleMimeType ?: ""} ${if (format.bitrate > 0) "${format.bitrate / 1000}kbps" else ""}".trim()
+                        )
+                        when (group.type) {
+                            C.TRACK_TYPE_TEXT -> subtitles.add(trackInfo)
+                            C.TRACK_TYPE_AUDIO -> audios.add(trackInfo)
+                            C.TRACK_TYPE_VIDEO -> videos.add(trackInfo)
+                        }
+                    }
+                }
+
+                _playerState.value = _playerState.value.copy(
+                    subtitleTracks = subtitles,
+                    audioTracks = audios,
+                    videoTracks = videos,
+                    selectedSubtitleTrack = subtitles.firstOrNull { it.isSelected },
+                    selectedAudioTrack = audios.firstOrNull { it.isSelected } ?: audios.firstOrNull(),
+                    selectedVideoTrack = videos.firstOrNull { it.isSelected } ?: videos.firstOrNull()
+                )
+            }
+
+            override fun onCues(cueGroup: CueGroup) {
+                val text = cueGroup.cues.joinToString("\n") { it.text?.toString() ?: "" }
+                _playerState.value = _playerState.value.copy(currentSubtitleText = text)
+            }
         })
     }
 
@@ -117,6 +169,9 @@ class PlayerController(
 
                 val progress = if (dur > 0) (pos.toFloat() / dur).coerceIn(0f, 1f) else 0f
                 val bufProgress = if (dur > 0) (buf.toFloat() / dur).coerceIn(0f, 1f) else 0f
+                val activeIdx = _playerState.value.transcriptSegments.indexOfFirst {
+                    pos >= it.startMs && pos <= it.endMs
+                }
 
                 _playerState.value = _playerState.value.copy(
                     currentPositionMs = pos,
@@ -125,7 +180,8 @@ class PlayerController(
                     progress = progress,
                     bufferedProgress = bufProgress,
                     currentTime = formatDuration(pos),
-                    totalTime = formatDuration(dur)
+                    totalTime = formatDuration(dur),
+                    activeTranscriptIndex = activeIdx
                 )
                 delay(250)
             }
@@ -137,13 +193,17 @@ class PlayerController(
         val pos = exoPlayer.currentPosition.coerceAtLeast(0L)
         val dur = exoPlayer.duration.coerceAtLeast(0L)
         val progress = if (dur > 0) (pos.toFloat() / dur).coerceIn(0f, 1f) else 0f
+        val activeIdx = _playerState.value.transcriptSegments.indexOfFirst {
+            pos >= it.startMs && pos <= it.endMs
+        }
 
         _playerState.value = _playerState.value.copy(
             currentPositionMs = pos,
             durationMs = dur,
             progress = progress,
             currentTime = formatDuration(pos),
-            totalTime = formatDuration(dur)
+            totalTime = formatDuration(dur),
+            activeTranscriptIndex = activeIdx
         )
     }
 
@@ -206,6 +266,25 @@ class PlayerController(
         }
     }
 
+    fun stopPlayback() {
+        stopPositionPolling()
+        exoPlayer.stop()
+        exoPlayer.clearMediaItems()
+        _playerState.value = _playerState.value.copy(
+            isPlaying = false,
+            currentMedia = null,
+            title = "",
+            subtitle = "",
+            progress = 0f,
+            currentPositionMs = 0L,
+            durationMs = 0L,
+            currentTime = "0:00",
+            totalTime = "0:00",
+            activeTranscriptIndex = -1,
+            currentSubtitleText = ""
+        )
+    }
+
     fun seekTo(positionMs: Long) {
         val target = positionMs.coerceIn(0L, exoPlayer.duration.coerceAtLeast(0L))
         exoPlayer.seekTo(target)
@@ -256,6 +335,84 @@ class PlayerController(
 
     fun setLocked(locked: Boolean) {
         _playerState.value = _playerState.value.copy(isLocked = locked)
+    }
+
+    fun toggleFullscreen(enabled: Boolean? = null) {
+        val next = enabled ?: !_playerState.value.isFullscreen
+        _playerState.value = _playerState.value.copy(isFullscreen = next)
+    }
+
+    fun selectSubtitleTrack(track: MediaTrackInfo?) {
+        val currentParams = exoPlayer.trackSelectionParameters
+        if (track == null) {
+            val newParams = currentParams.buildUpon()
+                .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
+                .build()
+            exoPlayer.trackSelectionParameters = newParams
+            _playerState.value = _playerState.value.copy(
+                selectedSubtitleTrack = null,
+                currentSubtitleText = ""
+            )
+        } else {
+            val newParams = currentParams.buildUpon()
+                .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, false)
+                .setPreferredTextLanguage(track.language)
+                .build()
+            exoPlayer.trackSelectionParameters = newParams
+            _playerState.value = _playerState.value.copy(
+                selectedSubtitleTrack = track
+            )
+        }
+    }
+
+    fun selectAudioTrack(track: MediaTrackInfo) {
+        val currentParams = exoPlayer.trackSelectionParameters
+        val newParams = currentParams.buildUpon()
+            .setPreferredAudioLanguage(track.language)
+            .build()
+        exoPlayer.trackSelectionParameters = newParams
+        _playerState.value = _playerState.value.copy(
+            selectedAudioTrack = track,
+            audioTrack = track.label
+        )
+    }
+
+    fun selectVideoTrack(track: MediaTrackInfo?) {
+        _playerState.value = _playerState.value.copy(selectedVideoTrack = track)
+    }
+
+    fun updatePlayerPreferences(preferences: PlayerPreferences) {
+        _playerState.value = _playerState.value.copy(preferences = preferences)
+    }
+
+    fun loadTranscripts(segments: List<TranscriptSegment>) {
+        _playerState.value = _playerState.value.copy(transcriptSegments = segments)
+    }
+
+    private fun generateSampleTranscripts(durationMs: Long, title: String): List<TranscriptSegment> {
+        val effectiveDur = if (durationMs > 0) durationMs else 180000L
+        val segments = mutableListOf<TranscriptSegment>()
+        val segmentDuration = 5000L
+        var currentStart = 0L
+        var id = 0
+        val sampleLines = listOf(
+            "Welcome to $title on AuraPlayer Media Engine.",
+            "Experiencing crystal clear high-fidelity playback.",
+            "Adaptive audio rendering with studio-grade dynamics.",
+            "Interactive synchronized transcript and subtitle track live.",
+            "Tap on any transcript line to seek directly to that moment.",
+            "Smooth multi-touch gestures: swipe for brightness and volume.",
+            "Switch effortlessly between true fullscreen and portrait dock.",
+            "Advanced hardware acceleration enabled for uninterrupted stream."
+        )
+        while (currentStart < effectiveDur && id < 40) {
+            val end = (currentStart + segmentDuration).coerceAtMost(effectiveDur)
+            val text = sampleLines[id % sampleLines.size]
+            segments.add(TranscriptSegment(id = id, startMs = currentStart, endMs = end, text = text))
+            currentStart = end
+            id++
+        }
+        return segments
     }
 
     fun release() {

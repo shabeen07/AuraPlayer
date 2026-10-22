@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,9 +27,6 @@ import com.aura.player.ui.components.AuraBottomNav
 import com.aura.player.ui.components.AuraHeader
 import com.aura.player.ui.components.AuraTab
 import com.aura.player.ui.components.MiniPlayerDock
-import com.aura.player.ui.components.modals.CastPickerSheet
-import com.aura.player.ui.components.modals.ProfileDiagnosticsSheet
-import com.aura.player.ui.components.modals.QuickSearchSheet
 import com.aura.player.ui.home.HomeScreen
 import com.aura.player.ui.library.LibraryScreen
 import com.aura.player.ui.settings.SettingsScreen
@@ -41,15 +39,15 @@ fun MainShellScreen(
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableStateOf(AuraTab.HOME) }
-    var showSearchSheet by remember { mutableStateOf(false) }
-    var showCastSheet by remember { mutableStateOf(false) }
-    var showProfileSheet by remember { mutableStateOf(false) }
+    val playerState by repository.playerState.collectAsState()
+    val isMiniPlayerVisible = playerState.currentMedia != null || 
+        (playerState.title.isNotBlank() && playerState.title != "No Media Selected")
 
     val subtitle = when (selectedTab) {
-        AuraTab.HOME -> "Home"
-        AuraTab.VAULT -> "Vault"
-        AuraTab.LIBRARY -> "Library"
-        AuraTab.SETTINGS -> "Settings & EQ"
+        AuraTab.HOME -> "Discover & Stream"
+        AuraTab.VAULT -> "Private Vault"
+        AuraTab.LIBRARY -> "Media Library"
+        AuraTab.SETTINGS -> "Settings & Preferences"
     }
 
     Box(
@@ -60,13 +58,11 @@ fun MainShellScreen(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Top App Bar Header
+            // Minimalist Top App Bar Header
             AuraHeader(
                 subtitle = subtitle,
                 modifier = Modifier.statusBarsPadding(),
-                onSearchClick = { showSearchSheet = true },
-                onCastClick = { showCastSheet = true },
-                onProfileClick = { showProfileSheet = true }
+                onSearchClick = { selectedTab = AuraTab.LIBRARY }
             )
 
             // Content Area based on selected tab
@@ -75,43 +71,50 @@ fun MainShellScreen(
                     .weight(1f)
                     .fillMaxWidth()
             ) {
-                AnimatedContent(
-                    targetState = selectedTab,
-                    transitionSpec = {
-                        fadeIn(animationSpec = tween(220)) togetherWith
-                                fadeOut(animationSpec = tween(180))
-                    },
-                    label = "tabTransition",
-                    modifier = Modifier.fillMaxSize()
-                ) { targetTab ->
-                    when (targetTab) {
-                        AuraTab.HOME -> {
-                            HomeScreen(
-                                repository = repository,
-                                onNavigateToPlayer = onNavigateToPlayer,
-                                onNavigateToVault = { selectedTab = AuraTab.VAULT },
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                        AuraTab.LIBRARY -> {
-                            LibraryScreen(
-                                repository = repository,
-                                onPlayItem = onNavigateToPlayer,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                        AuraTab.VAULT -> {
-                            VaultScreen(
-                                repository = repository,
-                                onPlayItem = onNavigateToPlayer,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                        AuraTab.SETTINGS -> {
-                            SettingsScreen(
-                                repository = repository,
-                                modifier = Modifier.fillMaxSize()
-                            )
+                // Tab Content with dynamic padding when mini player is active
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = if (isMiniPlayerVisible) 74.dp else 0.dp)
+                ) {
+                    AnimatedContent(
+                        targetState = selectedTab,
+                        transitionSpec = {
+                            fadeIn(animationSpec = tween(180)) togetherWith
+                                    fadeOut(animationSpec = tween(140))
+                        },
+                        label = "tabTransition",
+                        modifier = Modifier.fillMaxSize()
+                    ) { targetTab ->
+                        when (targetTab) {
+                            AuraTab.HOME -> {
+                                HomeScreen(
+                                    repository = repository,
+                                    onNavigateToPlayer = onNavigateToPlayer,
+                                    onNavigateToVault = { selectedTab = AuraTab.VAULT },
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                            AuraTab.LIBRARY -> {
+                                LibraryScreen(
+                                    repository = repository,
+                                    onPlayItem = onNavigateToPlayer,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                            AuraTab.VAULT -> {
+                                VaultScreen(
+                                    repository = repository,
+                                    onPlayItem = onNavigateToPlayer,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                            AuraTab.SETTINGS -> {
+                                SettingsScreen(
+                                    repository = repository,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
                         }
                     }
                 }
@@ -121,7 +124,7 @@ fun MainShellScreen(
                     repository = repository,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 4.dp),
+                        .padding(bottom = 6.dp),
                     onPlayerClick = onNavigateToPlayer
                 )
             }
@@ -131,26 +134,6 @@ fun MainShellScreen(
                 selectedTab = selectedTab,
                 onTabSelected = { selectedTab = it }
             )
-        }
-
-        // Header Action Sheets
-        if (showSearchSheet) {
-            QuickSearchSheet(
-                repository = repository,
-                onMediaSelected = {
-                    repository.playMedia(it)
-                    onNavigateToPlayer()
-                },
-                onDismiss = { showSearchSheet = false }
-            )
-        }
-
-        if (showCastSheet) {
-            CastPickerSheet(onDismiss = { showCastSheet = false })
-        }
-
-        if (showProfileSheet) {
-            ProfileDiagnosticsSheet(onDismiss = { showProfileSheet = false })
         }
     }
 }

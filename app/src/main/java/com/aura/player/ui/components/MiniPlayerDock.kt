@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Forward10
 import androidx.compose.material.icons.filled.Headphones
 import androidx.compose.material.icons.filled.Movie
@@ -237,6 +238,20 @@ fun MiniPlayerDock(
                                 contentDescription = "Forward 10s",
                                 tint = AuraOnSurfaceVariant,
                                 modifier = Modifier.size(17.dp)
+                            )
+                        }
+
+                        IconButton(
+                            onClick = { repository.stopPlayback() },
+                            modifier = Modifier
+                                .size(30.dp)
+                                .background(AuraSurfaceContainer.copy(alpha = 0.7f), CircleShape)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close Player",
+                                tint = AuraOnSurfaceVariant,
+                                modifier = Modifier.size(15.dp)
                             )
                         }
                     }

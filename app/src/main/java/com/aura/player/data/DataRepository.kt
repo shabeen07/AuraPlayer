@@ -4,8 +4,11 @@ import android.content.Context
 import com.aura.player.R
 import com.aura.player.data.model.DownloadItem
 import com.aura.player.data.model.MediaItem
+import com.aura.player.data.model.MediaTrackInfo
+import com.aura.player.data.model.PlayerPreferences
 import com.aura.player.data.model.PlayerState
 import com.aura.player.data.model.StorageStats
+import com.aura.player.data.model.TranscriptSegment
 import com.aura.player.data.model.VaultStoredItem
 import com.aura.player.data.source.LocalMediaDataSource
 import com.aura.player.player.PlayerController
@@ -40,6 +43,7 @@ interface DataRepository {
     fun playMedia(media: MediaItem)
     fun playStreamUrl(url: String, title: String? = null, isVideo: Boolean = true)
     fun togglePlayPause()
+    fun stopPlayback()
     fun setPlaybackProgress(progress: Float)
     fun seekTo(positionMs: Long)
     fun skipForward(seconds: Long = 10)
@@ -47,6 +51,12 @@ interface DataRepository {
     fun updateVolume(volume: Float)
     fun updateBrightness(brightness: Float)
     fun setPlaybackSpeed(speed: Float)
+    fun toggleFullscreen(enabled: Boolean? = null)
+    fun selectSubtitleTrack(track: MediaTrackInfo?)
+    fun selectAudioTrack(track: MediaTrackInfo)
+    fun selectVideoTrack(track: MediaTrackInfo?)
+    fun updatePlayerPreferences(preferences: PlayerPreferences)
+    fun loadTranscripts(segments: List<TranscriptSegment>)
     fun toggleDownloadPause(id: String)
     fun removeDownload(id: String)
 }
@@ -138,7 +148,9 @@ class DefaultDataRepository(private val context: Context) : DataRepository {
                     format = "Video",
                     category = "Movies & Videos",
                     uri = video.uri,
-                    isVideo = true
+                    isVideo = true,
+                    duration = video.duration,
+                    thumbnailUri = video.thumbnailUri
                 )
             )
         }
@@ -153,7 +165,9 @@ class DefaultDataRepository(private val context: Context) : DataRepository {
                     format = "Audio",
                     category = "Audio & Music",
                     uri = audio.uri,
-                    isVideo = false
+                    isVideo = false,
+                    duration = audio.duration,
+                    thumbnailUri = audio.thumbnailUri
                 )
             )
         }
@@ -196,6 +210,10 @@ class DefaultDataRepository(private val context: Context) : DataRepository {
         playerController.togglePlayPause()
     }
 
+    override fun stopPlayback() {
+        playerController.stopPlayback()
+    }
+
     override fun setPlaybackProgress(progress: Float) {
         playerController.seekToProgress(progress)
     }
@@ -222,6 +240,30 @@ class DefaultDataRepository(private val context: Context) : DataRepository {
 
     override fun setPlaybackSpeed(speed: Float) {
         playerController.setPlaybackSpeed(speed)
+    }
+
+    override fun toggleFullscreen(enabled: Boolean?) {
+        playerController.toggleFullscreen(enabled)
+    }
+
+    override fun selectSubtitleTrack(track: MediaTrackInfo?) {
+        playerController.selectSubtitleTrack(track)
+    }
+
+    override fun selectAudioTrack(track: MediaTrackInfo) {
+        playerController.selectAudioTrack(track)
+    }
+
+    override fun selectVideoTrack(track: MediaTrackInfo?) {
+        playerController.selectVideoTrack(track)
+    }
+
+    override fun updatePlayerPreferences(preferences: PlayerPreferences) {
+        playerController.updatePlayerPreferences(preferences)
+    }
+
+    override fun loadTranscripts(segments: List<TranscriptSegment>) {
+        playerController.loadTranscripts(segments)
     }
 
     override fun toggleDownloadPause(id: String) {

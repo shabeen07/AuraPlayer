@@ -75,6 +75,8 @@ fun SettingsScreen(
     val context = LocalContext.current
     val fxController = repository.audioFxController
     val eqState by fxController.equalizerState.collectAsState()
+    val playerState by repository.playerState.collectAsState()
+    val prefs = playerState.preferences
 
     var hwAccelEnabled by remember { mutableStateOf(true) }
     var backgroundPlayEnabled by remember { mutableStateOf(true) }
@@ -334,7 +336,179 @@ fun SettingsScreen(
             }
         }
 
-        // 2. Playback Preferences Card
+        // 2. Video Player & Gestures Preferences Card
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(22.dp))
+                .background(AuraSurfaceContainer)
+                .padding(16.dp)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Tune,
+                        contentDescription = "Player Settings",
+                        tint = AuraPrimary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "PLAYER & GESTURES",
+                        color = AuraOnSurfaceVariant,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    )
+                }
+
+                // Touch Gestures Toggle
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Touch Gestures HUD",
+                            color = AuraOnSurface,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "Swipe vertically for brightness & volume, double tap to skip",
+                            color = AuraOnSurfaceVariant,
+                            fontSize = 11.sp
+                        )
+                    }
+                    Switch(
+                        checked = prefs.gesturesEnabled,
+                        onCheckedChange = {
+                            repository.updatePlayerPreferences(prefs.copy(gesturesEnabled = it))
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = AuraOnPrimaryContainer,
+                            checkedTrackColor = AuraPrimaryContainer
+                        )
+                    )
+                }
+
+                // Double Tap Skip Interval
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = "Double Tap Skip Interval",
+                        color = AuraOnSurface,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        listOf(5L, 10L, 15L, 30L).forEach { interval ->
+                            val isSelected = prefs.skipIntervalSeconds == interval
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(if (isSelected) AuraPrimaryContainer else AuraSurfaceContainerHigh)
+                                    .clickable {
+                                        repository.updatePlayerPreferences(prefs.copy(skipIntervalSeconds = interval))
+                                    }
+                                    .padding(vertical = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "${interval}s",
+                                    color = if (isSelected) AuraOnPrimaryContainer else AuraOnSurfaceVariant,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Default Video Aspect Ratio
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = "Default Aspect Ratio",
+                        color = AuraOnSurface,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        listOf(
+                            0 to "Fit (Aspect)",
+                            3 to "Zoom (Crop)",
+                            4 to "Fill (Stretch)"
+                        ).forEach { (mode, label) ->
+                            val isSelected = prefs.defaultResizeMode == mode
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(if (isSelected) AuraPrimaryContainer else AuraSurfaceContainerHigh)
+                                    .clickable {
+                                        repository.updatePlayerPreferences(prefs.copy(defaultResizeMode = mode))
+                                    }
+                                    .padding(vertical = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = label,
+                                    color = if (isSelected) AuraOnPrimaryContainer else AuraOnSurfaceVariant,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Subtitle Text Size Slider
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Subtitle Font Size",
+                            color = AuraOnSurface,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "${prefs.subtitleTextSizeSp.toInt()} sp",
+                            color = AuraSecondary,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Slider(
+                        value = prefs.subtitleTextSizeSp,
+                        onValueChange = {
+                            repository.updatePlayerPreferences(prefs.copy(subtitleTextSizeSp = it))
+                        },
+                        valueRange = 12f..24f,
+                        steps = 5,
+                        colors = SliderDefaults.colors(
+                            thumbColor = AuraPrimary,
+                            activeTrackColor = AuraPrimary,
+                            inactiveTrackColor = AuraSurfaceContainerHighest
+                        )
+                    )
+                }
+            }
+        }
+
+        // 3. Playback Preferences Card
         Box(
             modifier = Modifier
                 .fillMaxWidth()

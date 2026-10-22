@@ -48,7 +48,9 @@ data class VaultStoredItem(
     val imageResId: Int = 0,
     val category: String,
     val uri: String = "",
-    val isVideo: Boolean = false
+    val isVideo: Boolean = false,
+    val duration: String = "Secured",
+    val thumbnailUri: String? = null
 )
 
 data class StorageStats(
@@ -65,6 +67,28 @@ data class StorageStats(
     val cacheGb: Float = 0f,
     val freeGb: Float = 128f,
     val technology: String = "Internal Flash Storage"
+)
+
+data class TranscriptSegment(
+    val id: Int,
+    val startMs: Long,
+    val endMs: Long,
+    val text: String
+)
+
+data class MediaTrackInfo(
+    val id: String,
+    val label: String,
+    val language: String? = null,
+    val isSelected: Boolean = false,
+    val formatInfo: String? = null
+)
+
+data class PlayerPreferences(
+    val gesturesEnabled: Boolean = true,
+    val skipIntervalSeconds: Long = 10L,
+    val defaultResizeMode: Int = 0, // 0 = Fit, 3 = Zoom, 4 = Fill
+    val subtitleTextSizeSp: Float = 16f
 )
 
 data class PlayerState(
@@ -89,6 +113,17 @@ data class PlayerState(
     val brightness: Float = 0.75f,
     val volume: Float = 0.85f,
     val isLocked: Boolean = false,
+    val isFullscreen: Boolean = false,
+    val subtitleTracks: List<MediaTrackInfo> = emptyList(),
+    val audioTracks: List<MediaTrackInfo> = emptyList(),
+    val videoTracks: List<MediaTrackInfo> = emptyList(),
+    val selectedSubtitleTrack: MediaTrackInfo? = null,
+    val selectedAudioTrack: MediaTrackInfo? = null,
+    val selectedVideoTrack: MediaTrackInfo? = null,
+    val transcriptSegments: List<TranscriptSegment> = emptyList(),
+    val activeTranscriptIndex: Int = -1,
+    val currentSubtitleText: String = "",
+    val preferences: PlayerPreferences = PlayerPreferences(),
     val errorMessage: String? = null
 ) {
     val computedProgress: Float
